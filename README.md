@@ -1,134 +1,121 @@
 # VS Code Agents Starter
 
-A ready-to-use workspace starter for React + TypeScript + Vercel + Firebase Admin projects, with:
+A **brain-only** workspace template for React + TypeScript + Vercel + Firebase projects.
 
-- `AGENTS.md` — always-on workspace rules for every agent
-- `.github/copilot-instructions.md` — VS Code Copilot coding conventions
-- 5 custom VS Code agents in `.github/agents/`
-- A fully scaffolded `proxy/` folder with Vercel serverless routes
+Fork this into any new repo and your AI agents are immediately ready to use. The template contains no app code — just the rules and agent instructions that tell VS Code's Copilot Chat how to work in your projects.
 
 ---
 
-## Project structure
+## What's inside
 
 ```
-├─ AGENTS.md                          ← always-on workspace agent rules
-├─ .github/
-│  ├─ copilot-instructions.md         ← VS Code Copilot coding conventions
-│  └─ agents/
-│     ├─ starter.agent.md
-│     ├─ test-runner.agent.md
-│     ├─ translations.agent.md
-│     ├─ seo.agent.md
-│     └─ reviewer.agent.md
-└─ proxy/                             ← Vercel serverless API proxy
-   ├─ vercel.json
-   ├─ _middleware.ts
-   ├─ package.json
-   ├─ tsconfig.json
-   ├─ .env.example
-   ├─ lib/
-   │  ├─ firebaseAdmin.ts              ← single Firebase Admin bootstrap
-   │  ├─ cors.ts
-   │  ├─ responses.ts
-   │  └─ env.ts
-   └─ api/
-      ├─ auth/index.ts                 ← verify, getUser, revokeToken
-      ├─ db/index.ts                   ← get, list, create, update, remove
-      ├─ storage/index.ts              ← signedUrl, delete, list
-      └─ ai/index.ts                   ← placeholder ("AI not configured")
+vscode-agents-starter/
+├── AGENTS.md                        ← always-on workspace rules for every agent
+└── .github/
+    ├── copilot-instructions.md      ← VS Code Copilot coding conventions
+    └── agents/
+        ├── starter.agent.md         ← scaffolds new apps and features
+        ├── test-runner.agent.md     ← creates, runs, and fixes tests
+        ├── translations.agent.md   ← maintains locale files and UI copy
+        ├── seo.agent.md             ← creates and verifies metadata and SEO
+        └── reviewer.agent.md        ← reviews code quality, security, and rules
 ```
 
 ---
 
-## Quick start
+## How to use
 
-### 1. Clone and configure the proxy
+### 1. Fork or use as a template
 
-```bash
-cd proxy
-npm install
-cp .env.example .env.local
-# Fill in your Firebase Admin credentials in .env.local
+Click **Use this template** on GitHub to create a new repo with these files pre-loaded.
+Or fork it and rename it for your project.
+
+### 2. Open in VS Code
+
+VS Code automatically detects `AGENTS.md` and `.github/copilot-instructions.md` and applies them to every Copilot Chat session in the workspace.
+
+### 3. Pick an agent and start building
+
+Open VS Code Chat (`⌘I` / `Ctrl+I`), click the agent picker dropdown, and choose an agent.
+
+Example prompts:
+
+```
+@Starter create a tic-tac-toe game with Google login and Firebase
+@Starter scaffold a new React + TypeScript project with my standard proxy folder
+@Test Runner create and run tests for the auth module
+@Translations find all hardcoded strings and move them to locale files
+@SEO update the metadata and Open Graph tags for all routes
+@Reviewer review the last set of changes before I open a PR
 ```
 
-### 2. Run the proxy locally
-
-```bash
-cd proxy
-npm run dev
-# Starts Vercel dev server on http://localhost:3000
-```
-
-### 3. Configure your AI provider (when ready)
-
-Open `proxy/api/ai/index.ts` and replace the placeholder block with your chosen provider.
-Provider setup instructions are in the file comments (OpenAI, Anthropic, Gemini, Perplexity).
-
 ---
 
-## VS Code agents
+## Agents
 
-Open VS Code Chat (`⌘I` / `Ctrl+I`), click the agent picker, and you will see:
-
-| Agent | Purpose |
-|---|---|
-| **Starter** | Scaffold apps and features following repo conventions |
-| **Test Runner** | Create, run, and fix tests |
-| **Translations** | Maintain locale files and UI copy |
-| **SEO** | Create and verify metadata and structured data |
-| **Reviewer** | Review code for quality, security, and rule compliance |
-
-Agents hand off to each other automatically where configured.
-
----
-
-## Environment variables
-
-All required and optional env vars are documented in `proxy/.env.example`.
-
-For Vercel deployment, add them in:
-**Vercel Dashboard → Project → Settings → Environment Variables**
-
----
-
-## Firebase Admin credentials
-
-1. Go to Firebase Console → Project Settings → Service Accounts
-2. Click **Generate new private key**
-3. Copy values from the JSON file into your `.env.local`
-4. Make sure `FIREBASE_PRIVATE_KEY` has actual newlines (or `\\n` escaped — the lib normalizes both)
-
----
-
-## Proxy API routes
-
-### Auth — `POST/GET /api/auth?action=...`
-
-| Action | Method | Body / Query |
+| Agent | What it does | Hands off to |
 |---|---|---|
-| `verify` | POST | `{ idToken }` |
-| `getUser` | GET | `?uid=...` |
-| `revokeToken` | POST | `{ uid }` |
+| **Starter** | Scaffolds new apps, features, and the `proxy` folder structure | Test Runner, Reviewer |
+| **Test Runner** | Creates tests, runs lint/typecheck, fixes failures | Reviewer |
+| **Translations** | Detects missing keys, updates locale files, cleans up copy | SEO |
+| **SEO** | Creates and verifies metadata, OG tags, structured data, canonicals | Translations, Test Runner |
+| **Reviewer** | Reviews for correctness, security, naming, and rule compliance | — |
 
-### Database — `*/api/db?action=...`
+Agents hand off to each other automatically where configured — no manual switching needed.
 
-| Action | Method | Body / Query |
-|---|---|---|
-| `get` | GET | `?collection=...&id=...` |
-| `list` | GET | `?collection=...&limit=...` |
-| `create` | POST | `{ collection, data }` |
-| `update` | PUT | `{ collection, id, data }` |
-| `remove` | DELETE | `?collection=...&id=...` |
+---
 
-### Storage — `*/api/storage?action=...`
+## What the Starter agent scaffolds
 
-| Action | Method | Body / Query |
-|---|---|---|
-| `signedUrl` | POST | `{ filePath, action: "read"|"write", expiresIn? }` |
-| `delete` | DELETE | `?filePath=...` |
-| `list` | GET | `?prefix=...` |
+Every time you ask the Starter agent to create a new project or feature, it will generate a `proxy` folder in your project with the following structure:
 
-### AI — `POST /api/ai`
+```
+proxy/
+├── vercel.json
+├── _middleware.ts          ← CORS, security headers, request tracing
+├── .env.example            ← all required env vars documented
+├── package.json
+├── tsconfig.json
+├── lib/
+│   ├── firebaseAdmin.ts    ← single Firebase Admin bootstrap (auth, db, storage)
+│   ├── cors.ts
+│   ├── responses.ts        ← typed { success, message, data?, error? } helpers
+│   └── env.ts
+└── api/
+    ├── auth/index.ts       ← verify token, getUser, revokeToken
+    ├── db/index.ts         ← get, list, create, update, remove (Firestore)
+    ├── storage/index.ts    ← signedUrl, delete, list (Cloud Storage)
+    └── ai/index.ts         ← placeholder: "AI not configured" until you wire a provider
+```
 
-Returns `{ success: false, message: "AI not configured" }` until you wire up a provider in `proxy/api/ai/index.ts`.
+The AI route (`api/ai`) is always scaffolded but starts disabled, returning:
+```json
+{ "success": false, "message": "AI not configured" }
+```
+When you're ready, open `proxy/api/ai/index.ts` and follow the TODO comments to plug in OpenAI, Anthropic, Gemini, or Perplexity.
+
+---
+
+## Running agents in parallel
+
+VS Code agents run one at a time in a single chat window. For true parallel execution after a scaffold:
+
+- **Multiple VS Code windows** — open the project in 2–3 windows and run different agents simultaneously
+- **GitHub Actions** — add a workflow that runs tests, translation checks, and SEO audits in parallel on every push (ask the Starter agent to generate one)
+- **Copilot cloud agent** — assign separate GitHub Issues to the cloud agent for background parallel work (requires Copilot Pro+)
+
+---
+
+## AGENTS.md
+
+The `AGENTS.md` file is the single source of truth for all agents. It enforces:
+
+- React + TypeScript as the default stack
+- Latest stable packages only — no deprecated dependencies
+- Mandatory `proxy` folder on every new scaffold
+- Firebase Admin SDK on server only — never in client bundles
+- AI routes start as provider-agnostic placeholders
+- Structured JSON responses: `{ success, message, data?, error? }`
+- Lint, typecheck, and tests run after every meaningful change
+
+Edit `AGENTS.md` to adjust these rules for your project at any time.
